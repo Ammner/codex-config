@@ -1,0 +1,33 @@
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+
+[plugins."hugging-face@openai-curated"]
+enabled = true
+
+[plugins."superpowers@openai-curated"]
+enabled = true
+
+[plugins."vercel@openai-curated"]
+enabled = true
+
+[plugins."test-android-apps@openai-curated"]
+enabled = true
+
+[plugins."coderabbit@openai-curated"]
+enabled = true
+
+[plugins."codex-security@openai-curated"]
+enabled = true
+
+[plugins."weatherpromise@openai-curated"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[desktop]
+git-show-sidebar-pr-icons = true
+default-service-tier = "priority"
+
+[features]
+js_repl = false

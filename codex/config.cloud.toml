@@ -1,0 +1,15 @@
+[projects.'/workspace']
+trust_level = "trusted"
+
+# Cloud agents should avoid Desktop-only MCP entries and local browser profiles
+# unless the cloud runtime explicitly provisions them.
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+startup_timeout = 30
+
+[mcp_servers.sequential-thinking]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+startup_timeout = 30

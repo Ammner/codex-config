@@ -1,0 +1,65 @@
+[windows]
+sandbox = "elevated"
+
+[projects.'{{CODEX_WORK_ROOT}}']
+trust_level = "trusted"
+
+[projects.'{{HERMES_WORK_ROOT}}']
+trust_level = "trusted"
+
+# Codex Desktop owns generated local MCP entries such as node_repl.
+# Keep those local; do not commit machine-specific binary paths.
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest", "--no-usage-statistics", "--user-data-dir", "{{HERMES_WORK_ROOT_FWD}}/browser-profiles/chrome-devtools", "--viewport", "1280x900", "--redact-network-headers"]
+startup_timeout = 30
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest", "--browser", "chrome", "--user-data-dir", "{{HERMES_WORK_ROOT_FWD}}/browser-profiles/playwright", "--output-dir", "{{HERMES_WORK_ROOT_FWD}}/logs/playwright", "--timeout-action", "7000", "--timeout-navigation", "60000"]
+startup_timeout = 30
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+startup_timeout = 30
+
+[mcp_servers.sequential-thinking]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+startup_timeout = 30
+
+[mcp_servers.youtube-transcript]
+command = "npx"
+args = ["-y", "youtube-transcript-mcp"]
+startup_timeout = 30
+
+# Key-based servers are intentionally templates. Prefer env vars.
+#
+# [mcp_servers.brave-search]
+# command = "npx"
+# args = ["-y", "@modelcontextprotocol/server-brave-search"]
+# startup_timeout = 30
+# [mcp_servers.brave-search.env]
+# BRAVE_API_KEY = "fill-me"
+#
+# [mcp_servers.exa]
+# command = "npx"
+# args = ["-y", "exa-mcp-server"]
+# startup_timeout = 30
+# [mcp_servers.exa.env]
+# EXA_API_KEY = "fill-me"
+#
+# [mcp_servers.firecrawl]
+# command = "npx"
+# args = ["-y", "firecrawl-mcp"]
+# startup_timeout = 30
+# [mcp_servers.firecrawl.env]
+# FIRECRAWL_API_KEY = "fill-me"
+#
+# Graphiti/Hermes memory MCP. Requires dependencies plus keys.
+# [mcp_servers.graphiti-hermes]
+# command = "python"
+# args = ["{{HERMES_WORK_ROOT_FWD}}/.hermes/scripts/graphiti_mcp_server.py"]
+# startup_timeout = 60
