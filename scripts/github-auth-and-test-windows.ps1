@@ -23,7 +23,16 @@ Write-Host "This will store a GitHub PAT in Windows Git Credential Manager."
 Write-Host "Enter the PAT in the password field. It will not be printed."
 Write-Host ""
 
-$credential = Get-Credential -UserName $GitHubUser -Message "GitHub PAT login. Put your GitHub username in User name and your PAT in Password."
+$previousErrorActionPreference = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
+try {
+    $credential = Get-Credential -UserName $GitHubUser -Message "GitHub PAT login. Put your GitHub username in User name and your PAT in Password."
+} finally {
+    $ErrorActionPreference = $previousErrorActionPreference
+}
+if ($null -eq $credential) {
+    throw "Credential prompt was cancelled."
+}
 
 $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($credential.Password)
 try {
