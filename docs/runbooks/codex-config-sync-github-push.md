@@ -311,3 +311,38 @@ Acceptance criteria for 007:
 - The PowerShell helper script path is recorded.
 - The Mac clone/install commands are recorded.
 - Evidence or exact file path of the archived entry is returned.
+
+## 007 Archive Receipt
+
+007 accepted the handoff and reported archival completion on 2026-05-26.
+
+Archived paths reported by 007:
+
+```text
+/home/claw/.hermes/knowledge/cases/Codex配置同步GitHub推送全流程跑通_2026-05-26.md
+/home/claw/.hermes/memory/2026-05-26.md
+/home/claw/.hermes/MEMORY.md
+```
+
+007 reported these writes:
+
+- Shared knowledge case: 110 lines.
+- Daily memory: 44 lines.
+- Long-term `MEMORY.md`: 3 long-term rules appended.
+
+Long-term rules recorded by 007:
+
+- Git global `socks5` proxy can break Git Credential Manager. Prefer repo-local HTTP proxy overrides when needed.
+- Cross-platform Codex config should be split into `common/windows/macos/cloud`; do not sync Desktop-generated paths such as `node_repl`.
+- GitHub PATs must never enter chat, docs, shell history, or remote URLs.
+
+007 evidence:
+
+```text
+110  knowledge/cases/Codex配置同步GitHub推送全流程跑通_2026-05-26.md
+ 44  memory/2026-05-26.md
+ 48  MEMORY.md
+202  total
+```
+
+007 explicitly reported no PAT, token, private key, or credential value was written.
