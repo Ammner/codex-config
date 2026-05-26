@@ -73,3 +73,7 @@ git push -u origin main
 ```
 
 Keep this repository private if you add personal workflow rules.
+
+## Runbooks
+
+- [Codex Config Sync GitHub Push Runbook](docs/runbooks/codex-config-sync-github-push.md)
