@@ -23,18 +23,13 @@ Write-Host "This will store a GitHub PAT in Windows Git Credential Manager."
 Write-Host "Enter the PAT in the password field. It will not be printed."
 Write-Host ""
 
-$previousErrorActionPreference = $ErrorActionPreference
-$ErrorActionPreference = "Continue"
-try {
-    $credential = Get-Credential -UserName $GitHubUser -Message "GitHub PAT login. Put your GitHub username in User name and your PAT in Password."
-} finally {
-    $ErrorActionPreference = $previousErrorActionPreference
+$inputUser = Read-Host "GitHub username [$GitHubUser]"
+if (-not [string]::IsNullOrWhiteSpace($inputUser)) {
+    $GitHubUser = $inputUser
 }
-if ($null -eq $credential) {
-    throw "Credential prompt was cancelled."
-}
+$securePat = Read-Host "GitHub PAT (input hidden)" -AsSecureString
 
-$bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($credential.Password)
+$bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePat)
 try {
     $pat = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
     if ([string]::IsNullOrWhiteSpace($pat)) {
@@ -43,7 +38,7 @@ try {
 
     "protocol=https`nhost=github.com`n`n" | git credential reject | Out-Null
 
-    $approval = "protocol=https`nhost=github.com`nusername=$($credential.UserName)`npassword=$pat`n`n"
+    $approval = "protocol=https`nhost=github.com`nusername=$GitHubUser`npassword=$pat`n`n"
     $approval | git credential approve | Out-Null
 } finally {
     if ($bstr -ne [IntPtr]::Zero) {
