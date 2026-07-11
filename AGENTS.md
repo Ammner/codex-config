@@ -70,6 +70,22 @@ The sync repository is expected at:
 
 Synchronize templates and rules through Git. Do not synchronize auth tokens, session history, sqlite state, logs, or generated Desktop runtime paths.
 
+## Agent Role Defaults
+
+Use `rules/agent-roles.md` in the sync repository as the durable source of truth for Hermes, Codex, and Claude Code role boundaries.
+
+- Hermes is the coordinating brain: memory, durable context, task state, routing decisions, and long-term storage.
+- Codex is the default executor: research, browser work, file work, messages, Xiaohongshu and social publishing workflows, batch work, broad orchestration, and general implementation tasks.
+- Claude Code is the deep coding specialist alongside Codex: complex implementation, code planning, code review, debugging, refactoring, testing, and long interactive coding loops.
+
+Command prefix intent:
+
+- `hermes-*`: memory, task ledger, state synchronization, durable context, and routing records.
+- `codex-*`: default execution, broad tooling, research, browser automation, publishing workflows, and batch orchestration.
+- `cc-*`: Claude Code for deep code work, especially plan, review, loop, debug, fix, refactor, and test workflows.
+
+Do not route `cc-*` or explicit Claude Code requests through Smith/OpenClaw model fallback unless the user asks for remote execution. Do not frame Hermes as the default executor; frame it as the coordinator and memory layer.
+
 ## MCP
 
 No-key MCP servers may be enabled by templates. API-key servers should remain disabled or use environment variables. Never commit API keys.

@@ -9,6 +9,7 @@ It intentionally stores templates and install scripts, not machine-owned runtime
 - `AGENTS.md`
 - Codex config templates under `codex/`
 - Hermes bridge notes under `hermes/`
+- Role rules under `rules/`
 - install scripts under `scripts/`
 - environment examples under `env/`
 
@@ -48,6 +49,14 @@ It does not overwrite the active Codex Desktop config unless you pass:
 ```powershell
 D:\Hermes\codex-config\scripts\install-windows.ps1 -ForceConfig
 ```
+
+## Agent Role Defaults
+
+`rules/agent-roles.md` is the cross-platform source of truth for Hermes, Codex, and Claude Code role boundaries.
+
+- Hermes is the coordinating brain for memory, durable context, task state, routing decisions, and long-term storage.
+- Codex is the default executor for research, browser work, file work, messages, Xiaohongshu and social publishing workflows, batch work, broad orchestration, and general implementation tasks.
+- Claude Code is the deep coding specialist for complex implementation, planning, review, debugging, refactoring, testing, and long interactive coding loops.
 
 ## macOS Install
 
