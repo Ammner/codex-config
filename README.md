@@ -38,7 +38,7 @@ Run from PowerShell:
 D:\Hermes\codex-config\scripts\install-windows.ps1
 ```
 
-This copies `AGENTS.md`, sets user environment variables, and writes:
+This copies `AGENTS.md`, installs Claude Code global role rules under `~/.claude/rules/`, sets user environment variables, and writes:
 
 ```text
 <CODEX_HOME>\config.sync.generated.toml
@@ -65,6 +65,8 @@ Run:
 ```bash
 ~/Hermes/codex-config/scripts/install-macos.sh
 ```
+
+This also installs Claude Code global role rules under `~/.claude/rules/`.
 
 Use `--force-config` only on a fresh or intentionally replaced Codex config:
 

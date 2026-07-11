@@ -49,6 +49,40 @@ if (Test-Path $AgentsTarget) {
 }
 Copy-Item $AgentsSource $AgentsTarget -Force
 
+$ClaudeHome = Join-Path $HOME ".claude"
+$ClaudeRulesDir = Join-Path $ClaudeHome "rules"
+$RoleRulesSource = Join-Path $RepoRoot "rules\agent-roles.md"
+$RoleRulesTarget = Join-Path $ClaudeRulesDir "agent-roles.md"
+New-Item -ItemType Directory -Force -Path $ClaudeRulesDir | Out-Null
+Copy-Item $RoleRulesSource $RoleRulesTarget -Force
+
+$ClaudeMd = Join-Path $ClaudeHome "CLAUDE.md"
+$ClaudeRoleSection = @'
+<!-- codex-config:agent-roles:start -->
+## Hermes, Codex, and Claude Code Roles
+
+Load and follow `~/.claude/rules/agent-roles.md` for the durable role split:
+
+- Hermes is the coordinating brain for memory, durable context, task state, routing decisions, and long-term storage.
+- Codex is the default executor for research, browser work, file work, messages, Xiaohongshu and social publishing workflows, batch work, broad orchestration, and general implementation tasks.
+- Claude Code is the deep coding specialist for complex implementation, planning, review, debugging, refactoring, testing, and long interactive coding loops.
+
+Do not route `cc-*` or explicit Claude Code requests through Smith/OpenClaw model fallback unless the user asks for remote execution.
+<!-- codex-config:agent-roles:end -->
+'@
+
+if (Test-Path $ClaudeMd) {
+    $ClaudeMdContent = Get-Content $ClaudeMd -Raw
+    if ($ClaudeMdContent -match "(?s)<!-- codex-config:agent-roles:start -->.*?<!-- codex-config:agent-roles:end -->") {
+        $ClaudeMdContent = [regex]::Replace($ClaudeMdContent, "(?s)<!-- codex-config:agent-roles:start -->.*?<!-- codex-config:agent-roles:end -->", $ClaudeRoleSection)
+    } else {
+        $ClaudeMdContent = $ClaudeMdContent.TrimEnd() + "`n`n" + $ClaudeRoleSection + "`n"
+    }
+    [System.IO.File]::WriteAllText($ClaudeMd, $ClaudeMdContent, [System.Text.UTF8Encoding]::new($false))
+} else {
+    [System.IO.File]::WriteAllText($ClaudeMd, "# Claude Code Global Instructions`n`n$ClaudeRoleSection`n", [System.Text.UTF8Encoding]::new($false))
+}
+
 $Common = Get-Content (Join-Path $RepoRoot "codex\config.common.toml") -Raw
 $Overlay = Get-Content (Join-Path $RepoRoot "codex\config.windows.toml") -Raw
 
@@ -76,5 +110,7 @@ if ((-not (Test-Path $ConfigPath)) -or $ForceConfig) {
 }
 
 Write-Host "Copied AGENTS.md to: $AgentsTarget"
+Write-Host "Installed Claude Code role rules to: $RoleRulesTarget"
+Write-Host "Updated Claude Code global instructions: $ClaudeMd"
 Write-Host "Set user env: CODEX_HOME=$CodexHome"
 Write-Host "Set user env: HERMES_HOME=$HermesHome"
