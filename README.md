@@ -88,3 +88,4 @@ Keep this repository private if you add personal workflow rules.
 ## Runbooks
 
 - [Codex Config Sync GitHub Push Runbook](docs/runbooks/codex-config-sync-github-push.md)
+- [Nimbalyst + `cc 3p` on Windows and macOS](docs/runbooks/nimbalyst-cc3p.md)

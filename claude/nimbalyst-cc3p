@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+secret_file="${CC3P_SECRET_FILE:-$HOME/.hermes/secrets/third-party.env}"
+if [[ ! -f "$secret_file" ]]; then
+  echo "nimbalyst-cc3p: secret file not found: $secret_file" >&2
+  exit 1
+fi
+
+base_url=""
+auth_token=""
+while IFS='=' read -r raw_key raw_value; do
+  key="${raw_key//[[:space:]]/}"
+  value="${raw_value#${raw_value%%[![:space:]]*}}"
+  value="${value%${value##*[![:space:]]}}"
+  if [[ "$value" == \"*\" || "$value" == \'*\' ]]; then
+    value="${value:1:${#value}-2}"
+  fi
+  case "$key" in
+    THIRD_PARTY_BASE_URL) base_url="$value" ;;
+    THIRD_PARTY_AUTH_TOKEN) auth_token="$value" ;;
+  esac
+done < "$secret_file"
+
+base_url="${base_url:-https://www.claudecodeserver.top/api}"
+if [[ -z "$auth_token" ]]; then
+  echo "nimbalyst-cc3p: THIRD_PARTY_AUTH_TOKEN is missing from $secret_file" >&2
+  exit 1
+fi
+
+claude_binary="${NIMBALYST_CC3P_CLAUDE_BINARY:-}"
+if [[ -z "$claude_binary" ]]; then
+  for candidate in /opt/homebrew/bin/claude /usr/local/bin/claude "$HOME/.local/bin/claude"; do
+    if [[ -x "$candidate" ]]; then claude_binary="$candidate"; break; fi
+  done
+fi
+if [[ -z "$claude_binary" ]]; then
+  claude_binary="$(command -v claude || true)"
+fi
+if [[ -z "$claude_binary" || ! -x "$claude_binary" ]]; then
+  echo "nimbalyst-cc3p: Claude Code binary not found; set NIMBALYST_CC3P_CLAUDE_BINARY" >&2
+  exit 1
+fi
+
+export ANTHROPIC_BASE_URL="$base_url"
+export ANTHROPIC_AUTH_TOKEN="$auth_token"
+unset ANTHROPIC_API_KEY ANTHROPIC_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL
+unset ANTHROPIC_DEFAULT_SONNET_MODEL ANTHROPIC_DEFAULT_HAIKU_MODEL CLAUDE_CODE_SUBAGENT_MODEL
+
+exec "$claude_binary" "$@"
